@@ -4,47 +4,48 @@ echo  Gotify Client - Build Script
 echo ================================
 echo.
 
-echo Nettoyage des anciens builds...
+echo Cleaning previous builds...
 rmdir /s /q bin 2>nul
 rmdir /s /q obj 2>nul
 
 echo.
-echo Compilation en mode Release...
+echo Compiling in Release mode...
 dotnet build -c Release
 
 if %errorlevel% equ 0 (
     echo.
     echo ================================
-    echo Build reussi !
+    echo Build successful!
     echo ================================
     echo.
-    echo L'executable se trouve dans:
-    echo bin\Release\net6.0-windows\GotifyClient.exe
+    echo Executable located at:
+    echo bin\Release\net10.0-windows\GotifyClient.exe
     echo.
-    
-    choice /C YN /M "Voulez-vous publier une version autonome (sans .NET requis)"
+
+    choice /C YN /M "Do you want to publish a self-contained version (no .NET required)"
     if %errorlevel% equ 1 (
         echo.
-        echo Publication d'une version autonome...
+        echo Publishing self-contained version...
         dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
-        
+
         if %errorlevel% equ 0 (
             echo.
             echo ================================
-            echo Publication reussie !
+            echo Publish successful!
             echo ================================
             echo.
-            echo Version autonome dans:
-            echo bin\Release\net6.0-windows\win-x64\publish\GotifyClient.exe
+            echo Self-contained version located at:
+            echo bin\Release\net10.0-windows\win-x64\publish\GotifyClient.exe
         )
     )
 ) else (
     echo.
     echo ================================
-    echo Erreur de compilation !
+    echo Build failed!
     echo ================================
     echo.
-    echo Verifiez que .NET 6.0 SDK est installe.
+    echo Make sure .NET 10 SDK is installed.
+    echo Download: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-10.0.203-windows-x64-installer
 )
 
 echo.

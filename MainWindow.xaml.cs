@@ -39,14 +39,14 @@ namespace GotifyClient
             MessagesItemsControl.ItemsSource = messages;
             LoadConfiguration();
             UpdateEmptyState();
-            
-            // Si config existe, afficher les paramètres pour permettre la connexion
+
+            // If config exists, display server URL in header
             if (!string.IsNullOrEmpty(serverUrl) && !string.IsNullOrEmpty(clientToken))
             {
                 ServerUrlDisplay.Text = $"• {serverUrl}";
             }
-            
-            // Timer pour mettre à jour les temps relatifs toutes les minutes
+
+            // Timer to refresh relative timestamps every minute
             var timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMinutes(1);
             timer.Tick += (s, e) => RefreshRelativeTimes();
@@ -63,7 +63,7 @@ namespace GotifyClient
                 }
                 catch (Exception ex)
                 {
-                    System.Windows.MessageBox.Show($"Connexion automatique échouée: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    System.Windows.MessageBox.Show($"Auto-connect failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                     UpdateConnectionStatus(false);
                 }
             }
@@ -90,8 +90,8 @@ namespace GotifyClient
             notifyIcon.Visible = false;
 
             var contextMenu = new ContextMenuStrip();
-            contextMenu.Items.Add("Ouvrir", null, (s, e) => ShowWindow());
-            contextMenu.Items.Add("Quitter", null, (s, e) => QuitApplication());
+            contextMenu.Items.Add("Open", null, (s, e) => ShowWindow());
+            contextMenu.Items.Add("Quit", null, (s, e) => QuitApplication());
             notifyIcon.ContextMenuStrip = contextMenu;
             notifyIcon.DoubleClick += (s, e) => ShowWindow();
         }
@@ -151,7 +151,7 @@ namespace GotifyClient
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Erreur de chargement de la configuration: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show($"Error loading configuration: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -169,7 +169,7 @@ namespace GotifyClient
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show($"Erreur de sauvegarde de la configuration: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show($"Error saving configuration: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -196,26 +196,26 @@ namespace GotifyClient
 
             if (string.IsNullOrEmpty(serverUrl) || string.IsNullOrEmpty(clientToken))
             {
-                SettingsStatusText.Text = "Veuillez entrer l'URL du serveur et le token.";
+                SettingsStatusText.Text = "Please enter the server URL and token.";
                 return;
             }
 
             try
             {
                 SaveSettingsButton.IsEnabled = false;
-                SettingsStatusText.Text = "Connexion en cours...";
+                SettingsStatusText.Text = "Connecting...";
                 SettingsStatusText.Foreground = System.Windows.Media.Brushes.Blue;
-                
+
                 await TestConnection();
                 SaveConfiguration();
                 await ConnectWebSocket();
-                
+
                 SettingsOverlay.Visibility = Visibility.Collapsed;
                 ServerUrlDisplay.Text = $"• {serverUrl}";
             }
             catch (Exception ex)
             {
-                SettingsStatusText.Text = $"Erreur: {ex.Message}";
+                SettingsStatusText.Text = $"Error: {ex.Message}";
                 SettingsStatusText.Foreground = System.Windows.Media.Brushes.Red;
                 UpdateConnectionStatus(false);
             }
@@ -232,11 +232,11 @@ namespace GotifyClient
                 client.Timeout = TimeSpan.FromSeconds(10);
                 client.DefaultRequestHeaders.Add("X-Gotify-Key", clientToken);
                 var response = await client.GetAsync($"{serverUrl}/current/user");
-                
+
                 if (!response.IsSuccessStatusCode)
                 {
                     var errorContent = await response.Content.ReadAsStringAsync();
-                    throw new Exception($"Erreur HTTP {(int)response.StatusCode} ({response.StatusCode})\n\nURL: {serverUrl}/current/user\n\nDétails: {errorContent}");
+                    throw new Exception($"HTTP Error {(int)response.StatusCode} ({response.StatusCode})\n\nURL: {serverUrl}/current/user\n\nDetails: {errorContent}");
                 }
             }
         }
@@ -261,7 +261,7 @@ namespace GotifyClient
             }
             catch (Exception ex)
             {
-                throw new Exception($"Erreur de connexion WebSocket\n\nURL: {uri}\n\nDétails: {ex.Message}");
+                throw new Exception($"WebSocket connection error\n\nURL: {uri}\n\nDetails: {ex.Message}");
             }
         }
 
@@ -274,12 +274,12 @@ namespace GotifyClient
                     client.Timeout = TimeSpan.FromSeconds(10);
                     client.DefaultRequestHeaders.Add("X-Gotify-Key", clientToken);
                     var response = await client.GetAsync($"{serverUrl}/application");
-                    
+
                     if (response.IsSuccessStatusCode)
                     {
                         var json = await response.Content.ReadAsStringAsync();
                         var apps = JsonSerializer.Deserialize<List<GotifyApplication>>(json);
-                        
+
                         applicationNames.Clear();
                         foreach (var app in apps)
                         {
@@ -290,7 +290,7 @@ namespace GotifyClient
             }
             catch
             {
-                // Si on ne peut pas charger les noms, on continuera avec les IDs
+                // If app names can't be loaded, fall back to IDs
             }
         }
 
@@ -325,8 +325,8 @@ namespace GotifyClient
                         }
 
                         message.UpdateRelativeTime();
-                        
-                        // Injecter le nom de l'application si disponible
+
+                        // Inject application name if available
                         if (applicationNames.ContainsKey(message.appid))
                         {
                             message.ApplicationName = applicationNames[message.appid];
@@ -350,7 +350,7 @@ namespace GotifyClient
             {
                 Dispatcher.Invoke(() =>
                 {
-                    System.Windows.MessageBox.Show($"Erreur de réception: {ex.Message}", "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
+                    System.Windows.MessageBox.Show($"Receive error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     UpdateConnectionStatus(false);
                 });
             }
@@ -383,7 +383,7 @@ namespace GotifyClient
         {
             Dispatcher.Invoke(() =>
             {
-                StatusTextBlock.Text = connected ? "Connecté" : "Déconnecté";
+                StatusTextBlock.Text = connected ? "Connected" : "Disconnected";
                 StatusIndicator.Fill = connected
                     ? new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#10B981"))
                     : new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#EF4444"));
@@ -392,7 +392,7 @@ namespace GotifyClient
 
         private void UpdateMessageCount()
         {
-            MessageCountTextBlock.Text = messages.Count == 0 ? "Aucune notification" : 
+            MessageCountTextBlock.Text = messages.Count == 0 ? "No notifications" :
                                         $"{messages.Count} notification{(messages.Count > 1 ? "s" : "")}";
             UpdateEmptyState();
         }
@@ -422,10 +422,10 @@ namespace GotifyClient
         {
             System.Windows.MessageBox.Show(
                 "Gotify Client v1.0\n\n" +
-                "Client Windows natif pour Gotify\n\n" +
-                "Développé avec C# WPF\n" +
-                "Licence MIT",
-                "À propos",
+                "Native Windows client for Gotify\n\n" +
+                "Built with C# WPF\n" +
+                "MIT License",
+                "About",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information
             );
@@ -440,9 +440,9 @@ namespace GotifyClient
         public string title { get; set; }
         public int priority { get; set; }
         public DateTime date { get; set; }
-        
+
         public string ApplicationName { get; set; }
-        
+
         private string _relativeTime;
         public string RelativeTime
         {
@@ -455,24 +455,24 @@ namespace GotifyClient
         }
 
         public string AppId => !string.IsNullOrEmpty(ApplicationName) ? ApplicationName : $"App #{appid}";
-        public string Title => title ?? "Sans titre";
+        public string Title => title ?? "No title";
         public string Message => message ?? "";
         public string DateFormatted => GetLocalDate().ToString("dd/MM/yyyy HH:mm:ss");
-        
+
         public string PriorityColor
         {
             get
             {
                 return priority switch
                 {
-                    >= 8 => "#EF4444", // Rouge - Urgent
+                    >= 8 => "#EF4444", // Red - Urgent
                     >= 5 => "#F59E0B", // Orange - Important
-                    >= 2 => "#3B82F6", // Bleu - Normal
-                    _ => "#6B7280"     // Gris - Faible
+                    >= 2 => "#3B82F6", // Blue - Normal
+                    _ => "#6B7280"     // Grey - Low
                 };
             }
         }
-        
+
         public string PriorityIcon
         {
             get
@@ -499,15 +499,15 @@ namespace GotifyClient
             var diff = now - localDate;
 
             if (diff.TotalMinutes < 1)
-                RelativeTime = "À l'instant";
+                RelativeTime = "Just now";
             else if (diff.TotalMinutes < 60)
-                RelativeTime = $"Il y a {(int)diff.TotalMinutes} min";
+                RelativeTime = $"{(int)diff.TotalMinutes} min ago";
             else if (diff.TotalHours < 24)
-                RelativeTime = $"Il y a {(int)diff.TotalHours}h";
+                RelativeTime = $"{(int)diff.TotalHours}h ago";
             else if (diff.TotalDays < 7)
-                RelativeTime = $"Il y a {(int)diff.TotalDays}j";
+                RelativeTime = $"{(int)diff.TotalDays}d ago";
             else
-                RelativeTime = localDate.ToString("dd/MM");
+                RelativeTime = localDate.ToString("MM/dd");
         }
 
         private DateTime GetLocalDate()

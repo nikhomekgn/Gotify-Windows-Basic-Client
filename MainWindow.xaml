@@ -28,7 +28,7 @@
                 <Grid.Effect>
                     <DropShadowEffect Color="Black" Opacity="0.1" BlurRadius="10" ShadowDepth="2" Direction="270"/>
                 </Grid.Effect>
-                
+
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="30,0">
                     <Ellipse Width="50" Height="50" Fill="{StaticResource Accent}" Margin="0,0,15,0">
                         <Ellipse.Effect>
@@ -36,25 +36,25 @@
                         </Ellipse.Effect>
                     </Ellipse>
                     <TextBlock Text="🔔" FontSize="30" VerticalAlignment="Center" Margin="-42,0,0,0"/>
-                    
+
                     <StackPanel VerticalAlignment="Center" Margin="10,0,0,0">
                         <TextBlock Text="Notifications Center" FontSize="24" FontWeight="Bold" Foreground="{StaticResource PrimaryText}"/>
                         <StackPanel Orientation="Horizontal">
                             <Ellipse x:Name="StatusIndicator" Width="8" Height="8" Fill="#EF4444" Margin="0,2,5,0"/>
-                            <TextBlock x:Name="StatusTextBlock" Text="Déconnecté" FontSize="12" Foreground="{StaticResource MutedText}"/>
+                            <TextBlock x:Name="StatusTextBlock" Text="Disconnected" FontSize="12" Foreground="{StaticResource MutedText}"/>
                         </StackPanel>
                     </StackPanel>
-                    
+
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Center">
                         <Button Content="⚙️" FontSize="20" Width="40" Height="40" Margin="0,0,10,0"
                                 Background="Transparent" BorderThickness="0" Cursor="Hand"
-                                Click="ShowSettings_Click" ToolTip="Paramètres">
+                                Click="ShowSettings_Click" ToolTip="Settings">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" 
+                                                <Border Background="{TemplateBinding Background}"
                                                         CornerRadius="8" Padding="5">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
@@ -69,7 +69,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        
+
                         <Button x:Name="OptionsMenuButton" Content="⋯" FontSize="20" Width="40" Height="40"
                                 Background="Transparent" BorderThickness="0" Cursor="Hand"
                                 Click="ShowOptionsMenu_Click" ToolTip="Options">
@@ -78,7 +78,7 @@
                                     <Setter Property="Template">
                                         <Setter.Value>
                                             <ControlTemplate TargetType="Button">
-                                                <Border Background="{TemplateBinding Background}" 
+                                                <Border Background="{TemplateBinding Background}"
                                                         CornerRadius="8" Padding="5">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Border>
@@ -107,19 +107,19 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-                            
+
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock x:Name="MessageCountTextBlock" Text="0 notifications" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource SecondaryText}" VerticalAlignment="Center"/>
                                 <TextBlock x:Name="ServerUrlDisplay" Text="" FontSize="12" Foreground="{StaticResource MutedText}" Margin="15,0,0,0" VerticalAlignment="Center"/>
                             </StackPanel>
-                            
-                            <Button Grid.Column="1" Content="Tout effacer" Padding="12,6" 
+
+                            <Button Grid.Column="1" Content="Clear all" Padding="12,6"
                                     Background="{StaticResource SubtleButton}" BorderThickness="0"
                                     Foreground="{StaticResource SecondaryText}" FontSize="12" Cursor="Hand"
                                     Click="ClearMessagesButton_Click">
                                 <Button.Template>
                                     <ControlTemplate TargetType="Button">
-                                        <Border Background="{TemplateBinding Background}" 
+                                        <Border Background="{TemplateBinding Background}"
                                                 CornerRadius="6" Padding="{TemplateBinding Padding}">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
@@ -155,38 +155,38 @@
                                             </Style.Triggers>
                                         </Style>
                                     </Border.Style>
-                                    
+
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto"/>
                                             <ColumnDefinition Width="*"/>
                                             <ColumnDefinition Width="Auto"/>
                                         </Grid.ColumnDefinitions>
-                                        
+
                                         <!-- Icon -->
-                                        <Border Grid.Column="0" Width="50" Height="50" CornerRadius="10" 
+                                        <Border Grid.Column="0" Width="50" Height="50" CornerRadius="10"
                                                 Background="{Binding PriorityColor}" Margin="0,0,15,0">
-                                            <TextBlock Text="{Binding PriorityIcon}" FontSize="24" 
+                                            <TextBlock Text="{Binding PriorityIcon}" FontSize="24"
                                                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Border>
-                                        
+
                                         <!-- Content -->
                                         <StackPanel Grid.Column="1" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold" 
+                                            <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold"
                                                        Foreground="{StaticResource PrimaryText}" TextWrapping="Wrap" Margin="0,0,0,4"/>
-                                            <TextBlock Text="{Binding Message}" FontSize="13" Foreground="{StaticResource SecondaryText}" 
+                                            <TextBlock Text="{Binding Message}" FontSize="13" Foreground="{StaticResource SecondaryText}"
                                                        TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis"/>
-                                            <TextBlock Text="{Binding AppId}" FontSize="11" Foreground="{StaticResource MutedText}" 
+                                            <TextBlock Text="{Binding AppId}" FontSize="11" Foreground="{StaticResource MutedText}"
                                                        Margin="0,6,0,0" FontWeight="Medium"/>
                                         </StackPanel>
-                                        
+
                                         <!-- Time & Priority -->
                                         <StackPanel Grid.Column="2" VerticalAlignment="Top" HorizontalAlignment="Right" Margin="15,0,0,0">
-                                            <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="{StaticResource MutedText}" 
+                                            <TextBlock Text="{Binding DateFormatted}" FontSize="11" Foreground="{StaticResource MutedText}"
                                                        HorizontalAlignment="Right"/>
-                                            <Border Background="{Binding PriorityColor}" CornerRadius="4" 
+                                            <Border Background="{Binding PriorityColor}" CornerRadius="4"
                                                     Padding="8,3" Margin="0,8,0,0" HorizontalAlignment="Right">
-                                                <TextBlock Text="{Binding priority}" FontSize="11" FontWeight="Bold" 
+                                                <TextBlock Text="{Binding priority}" FontSize="11" FontWeight="Bold"
                                                            Foreground="White"/>
                                             </Border>
                                         </StackPanel>
@@ -195,15 +195,15 @@
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
-                    
+
                     <!-- Empty State -->
-                    <Border x:Name="EmptyState" Background="{StaticResource CardBackground}" CornerRadius="12" Padding="40" 
+                    <Border x:Name="EmptyState" Background="{StaticResource CardBackground}" CornerRadius="12" Padding="40"
                             Visibility="Collapsed" HorizontalAlignment="Center" Margin="0,40,0,0">
                         <StackPanel HorizontalAlignment="Center">
                             <TextBlock Text="🔕" FontSize="48" HorizontalAlignment="Center" Margin="0,0,0,15"/>
-                            <TextBlock Text="Aucune notification" FontSize="18" FontWeight="SemiBold" 
+                            <TextBlock Text="No notifications" FontSize="18" FontWeight="SemiBold"
                                        Foreground="{StaticResource SecondaryText}" HorizontalAlignment="Center"/>
-                            <TextBlock Text="Vous êtes à jour !" FontSize="13" Foreground="{StaticResource MutedText}" 
+                            <TextBlock Text="You're all caught up!" FontSize="13" Foreground="{StaticResource MutedText}"
                                        HorizontalAlignment="Center" Margin="0,5,0,0"/>
                         </StackPanel>
                     </Border>
@@ -213,12 +213,12 @@
 
         <!-- Settings Dialog Overlay -->
         <Grid x:Name="SettingsOverlay" Background="#DD000000" Visibility="Collapsed">
-            <Border Background="{StaticResource PanelBackground}" Width="520" Height="350" CornerRadius="16" 
+            <Border Background="{StaticResource PanelBackground}" Width="520" Height="350" CornerRadius="16"
                     HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Border.Effect>
                     <DropShadowEffect Color="Black" Opacity="0.3" BlurRadius="30" ShadowDepth="0"/>
                 </Border.Effect>
-                
+
                 <Grid Margin="30">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -227,28 +227,28 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" Margin="0,0,0,25">
-                        <TextBlock Text="⚙️ Paramètres de connexion" FontSize="22" FontWeight="Bold" Foreground="{StaticResource PrimaryText}"/>
-                        <TextBlock Text="Configurez votre serveur Gotify" FontSize="13" Foreground="{StaticResource SecondaryText}" Margin="0,5,0,0"/>
+                        <TextBlock Text="⚙️ Connection settings" FontSize="22" FontWeight="Bold" Foreground="{StaticResource PrimaryText}"/>
+                        <TextBlock Text="Configure your Gotify server" FontSize="13" Foreground="{StaticResource SecondaryText}" Margin="0,5,0,0"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1">
-                        <TextBlock Text="URL du serveur" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SecondaryText}" Margin="0,0,0,8"/>
+                        <TextBlock Text="Server URL" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SecondaryText}" Margin="0,0,0,8"/>
                         <Border Background="{StaticResource HeaderBackground}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="8" Height="42">
                             <TextBox x:Name="ServerUrlTextBox" Padding="12" FontSize="14" BorderThickness="0" Background="Transparent"
                                      ToolTip="Ex: https://gotify.example.com" VerticalContentAlignment="Center" Foreground="{StaticResource PrimaryText}"/>
                         </Border>
 
-                        <TextBlock Text="Token client" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SecondaryText}" Margin="0,20,0,8"/>
+                        <TextBlock Text="Client token" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource SecondaryText}" Margin="0,20,0,8"/>
                         <Border Background="{StaticResource HeaderBackground}" BorderBrush="{StaticResource BorderColor}" BorderThickness="1" CornerRadius="8" Height="42">
                             <PasswordBox x:Name="TokenPasswordBox" Padding="12" FontSize="14" BorderThickness="0" Background="Transparent"
-                                         ToolTip="Token d'application client" VerticalContentAlignment="Center" Foreground="{StaticResource PrimaryText}"/>
+                                         ToolTip="Client application token" VerticalContentAlignment="Center" Foreground="{StaticResource PrimaryText}"/>
                         </Border>
 
                         <TextBlock x:Name="SettingsStatusText" Foreground="#F87171" TextWrapping="Wrap" Margin="0,10,0,0" FontSize="12"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,25,0,0">
-                        <Button Content="Annuler" Width="100" Height="38" Margin="0,0,10,0"
+                        <Button Content="Cancel" Width="100" Height="38" Margin="0,0,10,0"
                                 Background="{StaticResource SubtleButton}" BorderThickness="0"
                                 Foreground="{StaticResource SecondaryText}" FontSize="14" FontWeight="SemiBold" Cursor="Hand"
                                 Click="CancelSettings_Click">
@@ -269,7 +269,7 @@
                                 </Style>
                             </Button.Style>
                         </Button>
-                        <Button x:Name="SaveSettingsButton" Content="Se connecter" Width="140" Height="38"
+                        <Button x:Name="SaveSettingsButton" Content="Connect" Width="140" Height="38"
                                 Background="{StaticResource Accent}" BorderThickness="0"
                                 Foreground="White" FontSize="14" FontWeight="SemiBold" Cursor="Hand"
                                 Click="SaveSettings_Click">
@@ -305,20 +305,20 @@
                     <DropShadowEffect Color="Black" Opacity="0.15" BlurRadius="15" ShadowDepth="5"/>
                 </Border.Effect>
                 <StackPanel Width="200">
-                    <CheckBox x:Name="SoundNotificationMenuItem" Content="Notifications sonores" IsChecked="True"
+                    <CheckBox x:Name="SoundNotificationMenuItem" Content="Sound notifications" IsChecked="True"
                               Foreground="{StaticResource SecondaryText}"
                               Margin="8,8,8,4" Checked="ToggleSoundNotification_Click" Unchecked="ToggleSoundNotification_Click"/>
-                    <CheckBox x:Name="WindowsNotificationMenuItem" Content="Notifications Windows" IsChecked="True"
+                    <CheckBox x:Name="WindowsNotificationMenuItem" Content="Windows notifications" IsChecked="True"
                               Foreground="{StaticResource SecondaryText}"
                               Margin="8,4,8,4" Checked="ToggleWindowsNotification_Click" Unchecked="ToggleWindowsNotification_Click"/>
-                    <CheckBox x:Name="MinimizeToTrayMenuItem" Content="Minimiser dans la barre" IsChecked="True"
+                    <CheckBox x:Name="MinimizeToTrayMenuItem" Content="Minimize to tray" IsChecked="True"
                               Foreground="{StaticResource SecondaryText}"
                               Margin="8,4,8,4"/>
                     <Separator Margin="0,8"/>
-                    <Button Content="À propos" Padding="8,6" Background="Transparent" BorderThickness="0"
+                    <Button Content="About" Padding="8,6" Background="Transparent" BorderThickness="0"
                             Foreground="{StaticResource SecondaryText}"
                             HorizontalContentAlignment="Left" Click="ShowAbout_Click"/>
-                    <Button Content="Quitter" Padding="8,6" Background="Transparent" BorderThickness="0"
+                    <Button Content="Quit" Padding="8,6" Background="Transparent" BorderThickness="0"
                             HorizontalContentAlignment="Left" Foreground="#F87171" Click="QuitApp_Click"/>
                 </StackPanel>
             </Border>
