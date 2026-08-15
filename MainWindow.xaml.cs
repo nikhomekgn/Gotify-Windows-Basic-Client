@@ -23,6 +23,7 @@ namespace GotifyClient
         private NotifyIcon notifyIcon;
         private ClientWebSocket webSocket;
         private CancellationTokenSource cancellationTokenSource;
+        private CancellationTokenSource reconnectCts;
         private ObservableCollection<GotifyMessage> messages;
         private string serverUrl;
         private string clientToken;
@@ -30,6 +31,7 @@ namespace GotifyClient
         private bool soundNotificationsEnabled = true;
         private bool windowsNotificationsEnabled = true;
         private Dictionary<int, string> applicationNames = new Dictionary<int, string>();
+        private static readonly int[] ReconnectDelaysSeconds = { 3, 6, 12, 30, 60 };
 
         public MainWindow()
         {
@@ -61,10 +63,9 @@ namespace GotifyClient
                 {
                     await ConnectWebSocket();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    System.Windows.MessageBox.Show($"Auto-connect failed: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    UpdateConnectionStatus(false);
+                    StartReconnectLoop();
                 }
             }
         }
@@ -106,6 +107,7 @@ namespace GotifyClient
 
         private void QuitApplication()
         {
+            StopReconnectLoop();
             DisconnectWebSocket();
             notifyIcon.Visible = false;
             notifyIcon.Dispose();
@@ -130,6 +132,7 @@ namespace GotifyClient
             }
             else
             {
+                StopReconnectLoop();
                 DisconnectWebSocket();
                 notifyIcon.Dispose();
             }
@@ -206,6 +209,7 @@ namespace GotifyClient
                 SettingsStatusText.Text = "Connecting...";
                 SettingsStatusText.Foreground = System.Windows.Media.Brushes.Blue;
 
+                StopReconnectLoop();
                 await TestConnection();
                 SaveConfiguration();
                 await ConnectWebSocket();
@@ -308,12 +312,14 @@ namespace GotifyClient
         private async Task ReceiveMessages()
         {
             var buffer = new byte[1024 * 4];
+            var token = cancellationTokenSource.Token;
+            bool unexpectedDisconnect = false;
 
             try
             {
-                while (webSocket.State == WebSocketState.Open && !cancellationTokenSource.Token.IsCancellationRequested)
+                while (webSocket.State == WebSocketState.Open && !token.IsCancellationRequested)
                 {
-                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), cancellationTokenSource.Token);
+                    var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), token);
 
                     if (result.MessageType == WebSocketMessageType.Text)
                     {
@@ -342,17 +348,75 @@ namespace GotifyClient
                     }
                     else if (result.MessageType == WebSocketMessageType.Close)
                     {
+                        unexpectedDisconnect = !token.IsCancellationRequested;
                         break;
                     }
                 }
             }
-            catch (Exception ex)
+            catch (OperationCanceledException)
             {
-                Dispatcher.Invoke(() =>
+                // Intentional disconnect (settings change, quit) - no reconnect needed.
+            }
+            catch
+            {
+                unexpectedDisconnect = !token.IsCancellationRequested;
+            }
+
+            UpdateConnectionStatus(false);
+
+            if (unexpectedDisconnect)
+            {
+                StartReconnectLoop();
+            }
+        }
+
+        private void StartReconnectLoop()
+        {
+            StopReconnectLoop();
+            reconnectCts = new CancellationTokenSource();
+            _ = Task.Run(() => ReconnectLoop(reconnectCts.Token));
+        }
+
+        private void StopReconnectLoop()
+        {
+            reconnectCts?.Cancel();
+            reconnectCts?.Dispose();
+            reconnectCts = null;
+        }
+
+        private async Task ReconnectLoop(CancellationToken token)
+        {
+            int attempt = 0;
+
+            while (!token.IsCancellationRequested)
+            {
+                int delaySeconds = ReconnectDelaysSeconds[Math.Min(attempt, ReconnectDelaysSeconds.Length - 1)];
+                UpdateConnectionStatus(false, $"Reconnecting in {delaySeconds}s...");
+
+                try
                 {
-                    System.Windows.MessageBox.Show($"Receive error: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                    UpdateConnectionStatus(false);
-                });
+                    await Task.Delay(TimeSpan.FromSeconds(delaySeconds), token);
+                }
+                catch (OperationCanceledException)
+                {
+                    return;
+                }
+
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
+                try
+                {
+                    UpdateConnectionStatus(false, "Reconnecting...");
+                    await ConnectWebSocket();
+                    return;
+                }
+                catch
+                {
+                    attempt++;
+                }
             }
         }
 
@@ -379,14 +443,14 @@ namespace GotifyClient
             }
         }
 
-        private void UpdateConnectionStatus(bool connected)
+        private void UpdateConnectionStatus(bool connected, string statusText = null)
         {
             Dispatcher.Invoke(() =>
             {
-                StatusTextBlock.Text = connected ? "Connected" : "Disconnected";
+                StatusTextBlock.Text = statusText ?? (connected ? "Connected" : "Disconnected");
                 StatusIndicator.Fill = connected
                     ? new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#10B981"))
-                    : new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString("#EF4444"));
+                    : new SolidColorBrush((System.Windows.Media.Color)ColorConverter.ConvertFromString(statusText != null ? "#F59E0B" : "#EF4444"));
             });
         }
 
