@@ -7,8 +7,6 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>GotifyClient</AssemblyName>
     <Version>1.0.0</Version>
-    <Authors>Your Name</Authors>
-    <Company>Your Company</Company>
     <Product>Gotify Windows Client</Product>
     <Description>Native Windows client for Gotify</Description>
     <ApplicationIcon>assets\gotify.ico</ApplicationIcon>
