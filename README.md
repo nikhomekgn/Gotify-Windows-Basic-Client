@@ -6,6 +6,7 @@ Native Windows client in C# WPF to receive notifications from a Gotify server.
 
 - ✅ WebSocket connection to Gotify
 - ✅ Real-time notification reception
+- ✅ Automatic reconnect with backoff if the connection drops
 - ✅ Native Windows notifications (balloon tips)
 - ✅ System tray icon
 - ✅ Automatic minimize-to-tray
@@ -15,14 +16,14 @@ Native Windows client in C# WPF to receive notifications from a Gotify server.
 ## Requirements
 
 - Windows 10/11
-- .NET 6.0 Runtime or SDK
+- .NET 10.0 Runtime or SDK
 - A Gotify server with a client token
 
 ## Installation
 
 ### Option 1: Build from source
 
-1. Install the [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0)
+1. Install the [.NET 10.0 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)
 2. Open a terminal in the project directory
 3. Build the project:
 
@@ -30,7 +31,7 @@ Native Windows client in C# WPF to receive notifications from a Gotify server.
 dotnet build -c Release
 ```
 
-The executable will be in: `bin/Release/net6.0-windows/GotifyClient.exe`
+The executable will be in: `bin/Release/net10.0-windows/GotifyClient.exe`
 
 ### Option 2: Publish a self-contained build
 
@@ -40,7 +41,7 @@ To create a standalone executable that does not require .NET to be installed:
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
 
-The executable will be in: `bin/Release/net6.0-windows/win-x64/publish/GotifyClient.exe`
+The executable will be in: `bin/Release/net10.0-windows/win-x64/publish/GotifyClient.exe`
 
 ## Usage
 
@@ -69,6 +70,7 @@ The configuration (server URL and token) is saved automatically to `gotify_confi
 - **Double-click the tray icon**: Restores the window
 - **Right-click the tray icon**: Shows the context menu (Open/Quit)
 - **Clear messages**: Removes the displayed message history (does not delete messages on the server)
+- **Dropped connection**: If the WebSocket connection is lost, the app automatically retries in the background with increasing delays (3s, 6s, 12s, 30s, then every 60s) until it reconnects. No manual action needed.
 
 ## Troubleshooting
 
@@ -78,6 +80,7 @@ The configuration (server URL and token) is saved automatically to `gotify_confi
 - Verify the token is valid
 - Confirm the Gotify server is reachable from your network
 - Ensure the WebSocket port is open (usually the same as HTTP/HTTPS)
+- If the connection was working before and just dropped, give it a moment — the app retries automatically. Use the settings dialog only if you need to change the server URL or token.
 
 ### Notifications do not appear
 
@@ -90,7 +93,7 @@ If you use a self-signed certificate, you may need to update the code to accept 
 
 ## Technologies used
 
-- C# / .NET 6
+- C# / .NET 10
 - WPF (Windows Presentation Foundation)
 - WebSocket for real-time connectivity
 - System.Windows.Forms for the tray icon
