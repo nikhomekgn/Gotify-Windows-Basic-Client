@@ -95,6 +95,12 @@ If you use a self-signed certificate, you may need to update the code to accept 
 - WebSocket for real-time connectivity
 - System.Windows.Forms for the tray icon
 
+## Credits
+
+This is an unofficial, community-built client and is not affiliated with the Gotify project.
+
+The Gotify logo is used under the [Creative Commons Attribution 4.0 International License](https://github.com/gotify/logo) (c) gotify/logo contributors.
+
 ## License
 
 MIT License - Free to use and modify

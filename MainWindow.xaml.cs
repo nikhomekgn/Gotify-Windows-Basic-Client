@@ -86,7 +86,10 @@ namespace GotifyClient
         private void InitializeSystemTray()
         {
             notifyIcon = new NotifyIcon();
-            notifyIcon.Icon = System.Drawing.SystemIcons.Information;
+            var exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName;
+            notifyIcon.Icon = !string.IsNullOrEmpty(exePath)
+                ? System.Drawing.Icon.ExtractAssociatedIcon(exePath)
+                : System.Drawing.SystemIcons.Information;
             notifyIcon.Text = "Gotify Client";
             notifyIcon.Visible = false;
 
@@ -486,9 +489,11 @@ namespace GotifyClient
         {
             System.Windows.MessageBox.Show(
                 "Gotify Client v1.0\n\n" +
-                "Native Windows client for Gotify\n\n" +
+                "Native Windows client for Gotify\n" +
+                "Unofficial, community-built - not affiliated with the Gotify project\n\n" +
                 "Built with C# WPF\n" +
-                "MIT License",
+                "MIT License\n\n" +
+                "Gotify logo (c) gotify/logo contributors, licensed under CC BY 4.0",
                 "About",
                 MessageBoxButton.OK,
                 MessageBoxImage.Information

@@ -11,7 +11,11 @@
     <Company>Your Company</Company>
     <Product>Gotify Windows Client</Product>
     <Description>Native Windows client for Gotify</Description>
+    <ApplicationIcon>assets\gotify.ico</ApplicationIcon>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Resource Include="assets\gotify.ico" />
+  </ItemGroup>
 
 </Project>

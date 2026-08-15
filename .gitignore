@@ -47,3 +47,7 @@ Desktop.ini
 
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
+
+# Windows "mark of the web" alternate data stream (shows up as a separate
+# file when downloads are copied through WSL)
+*:Zone.Identifier
