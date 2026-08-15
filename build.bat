@@ -44,8 +44,8 @@ if %errorlevel% equ 0 (
     echo Build failed!
     echo ================================
     echo.
-    echo Make sure .NET 10 SDK is installed.
-    echo Download: https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/sdk-10.0.203-windows-x64-installer
+    echo Make sure the latest .NET 10 SDK is installed.
+    echo Download: https://dotnet.microsoft.com/en-us/download/dotnet/10.0
 )
 
 echo.
