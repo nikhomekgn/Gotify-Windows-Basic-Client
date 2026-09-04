@@ -177,7 +177,7 @@
                                             <TextBlock Text="{Binding Title}" FontSize="15" FontWeight="SemiBold"
                                                        Foreground="{StaticResource PrimaryText}" TextWrapping="Wrap" Margin="0,0,0,4"/>
                                             <TextBlock Text="{Binding Message}" FontSize="13" Foreground="{StaticResource SecondaryText}"
-                                                       TextWrapping="Wrap" MaxHeight="60" TextTrimming="CharacterEllipsis"/>
+                                                       TextWrapping="Wrap" MaxHeight="120" TextTrimming="CharacterEllipsis"/>
                                             <TextBlock Text="{Binding AppId}" FontSize="11" Foreground="{StaticResource MutedText}"
                                                        Margin="0,6,0,0" FontWeight="Medium"/>
                                         </StackPanel>
